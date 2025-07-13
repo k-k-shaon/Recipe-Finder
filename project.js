@@ -15,6 +15,12 @@ let allmeal = (txt) =>{
 
 let displaymeal = (meals) =>{
     const container = document.getElementById("search-result")
+    container.innerHTML = "";
+
+    if (!meals) {
+        container.innerHTML = `<p class="notfound">No results found.</p>`;
+        return;
+    }
 
     meals.forEach((element) => {
         const div =document.createElement("div");
@@ -23,10 +29,40 @@ let displaymeal = (meals) =>{
         div.innerHTML=`
         <img src="${element.strMealThumb}">
         <h5>${element.strMeal}</h5>
-        `
+        `;
+
+        div.addEventListener("click", ()=>{
+            DetailCard (element);
+        })
         container.appendChild(div);
-            console.log(element)
     });
 }
+
+let DetailCard = (meal) => {
+    const detailCard = document.getElementById("details-card");
+
+    let ingredients = [];
+    for (let i = 1; i <= 20; i++) {
+        const ingredient = meal[`strIngredient${i}`];
+        const measure = meal[`strMeasure${i}`];
+        if (ingredient && ingredient.trim() !== "") {
+            ingredients += `<li>${ingredient} - ${measure}</li>`;
+        }
+    }
+
+    detailCard.innerHTML = `
+        <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+        <div class="info">
+            <h3>${meal.strMeal}</h3>
+            <p><strong>Category:</strong> ${meal.strCategory}</p>
+            <p><strong>Ingredients:</strong></p>
+            <ul>${ingredients}</ul>
+            <p><strong>Instructions:</strong></p>
+            <p>${meal.strInstructions}</p>
+        </div>
+    `;
+};
+
+
 
 button.addEventListener("click", handle_searched_txt);
